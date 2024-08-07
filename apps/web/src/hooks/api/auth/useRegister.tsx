@@ -4,6 +4,7 @@ import { axiosInstance } from "@/lib/axios";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 interface RegisterArgs {
   name: string;
@@ -24,12 +25,12 @@ const useRegister = () => {
         password: payload.password,
       });
 
-      alert("Register Success");
+      toast.success("register success");
       //ini yang bikin ketika klik submit di register akan langsung masuk ke hal login
       router.push("/login");
     } catch (error) {
       if (error instanceof AxiosError) {
-        alert(error.response?.data || "something went wrong");
+        toast.error(error.response?.data);
       }
     } finally {
       setIsLoading(false);
