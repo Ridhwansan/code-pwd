@@ -1,8 +1,9 @@
-import Image from "next/image";
-import styles from "./page.module.css";
-import Register from "./register/page";
+import Homepage from "@/features/home/index";
 
 export default function Home() {
-  return <main>Homepage</main>;
+  return (
+    <main>
+      <Homepage />
+    </main>
+  );
 }
- 
