@@ -8,58 +8,47 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useFormik } from "formik";
-import { LoginSchema } from "./schemas/loginSchema";
 import useLogin from "@/hooks/api/auth/useLogin";
-import Link from "next/link";
+import { ResetPasswordSchema } from "./schemas/resetPasswordSchema";
+import { FC } from "react";
+import useResetPassword from "@/hooks/api/auth/useResetPassword";
 
-const LoginPage = () => {
-  const { login, isLoading } = useLogin();
+interface ResetPasswordPageProps {
+  token: string;
+}
+
+const ResetPasswordPage: FC<ResetPasswordPageProps> = ({ token }) => {
+  const { resetPassword, isLoading } = useResetPassword();
 
   const formik = useFormik({
     initialValues: {
-      email: "",
       password: "",
+      confirmPassword: "",
     },
-    validationSchema: LoginSchema,
-    onSubmit: async (values) => {
-      await login(values);
+    validationSchema: ResetPasswordSchema,
+    onSubmit: async (values, { resetForm }) => {
+      await resetPassword(values.password, token);
+      resetForm();
     },
   });
   return (
     <main className="flex justify-center pt-20">
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle>Sign In</CardTitle>
+          <CardTitle>Reset Password</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={formik.handleSubmit}>
             <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  name="email"
-                  type="email"
-                  value={formik.values.email}
-                  placeholder="Your Email"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-              </div>
-              {!!formik.touched.email && !!formik.errors.email ? (
-                <p className="text-xs text-red-500">{formik.errors.email}</p>
-              ) : (
-                ""
-              )}
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="password">Password</Label>
                 <Input
                   name="password"
                   type="password"
                   value={formik.values.password}
-                  placeholder="Your Password"
+                  placeholder="Your new Password"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className="mb-3"
                 />
               </div>
               {!!formik.touched.password && !!formik.errors.password ? (
@@ -67,18 +56,32 @@ const LoginPage = () => {
               ) : (
                 ""
               )}
+
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Input
+                  name="confirmPassword"
+                  type="password"
+                  value={formik.values.confirmPassword}
+                  placeholder="Your new Password"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+              </div>
+              {!!formik.touched.confirmPassword &&
+              !!formik.errors.confirmPassword ? (
+                <p className="text-xs text-red-500">
+                  {formik.errors.confirmPassword}
+                </p>
+              ) : (
+                ""
+              )}
             </div>
-            <Link href="/forgot-password" className="text-xs">
-              Forgot Password?
-            </Link>
             {/* ditaro disini */}
             {/* ini maksudnya kalau loading nanti buttonnya akan ke disable */}
             <Button className="mt-6 w-full" disabled={isLoading}>
               {isLoading ? "Loading..." : "Submit"}
             </Button>
-            <Link href="/register" className="text-xs flex justify-center mt-3">
-              dont have an account? Register here
-            </Link>
           </form>
         </CardContent>
       </Card>
@@ -86,4 +89,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default ResetPasswordPage;

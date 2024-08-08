@@ -23,14 +23,14 @@ const useLogin = () => {
   const login = async (payload: LoginPayload) => {
     setIsLoading(true);
     try {
-      const { data } = await axiosInstance.post("/api/auth/login", payload);
+      const { data } = await axiosInstance.post("/auth/login", payload);
       dispatch(loginAction(data));
       // /api/auth itu dari app
       // /login itu dari router
-      await axiosInstance.post("/api/auth/login", payload);
+      await axiosInstance.post("/auth/login", payload);
       toast.success("login success");
 
-      //ini untuk ketika sudah login dia akan masuk ke halaman localhost3000/ 
+      //ini untuk ketika sudah login dia akan masuk ke halaman localhost3000/
       router.push("/");
     } catch (error) {
       if (error instanceof AxiosError) {
